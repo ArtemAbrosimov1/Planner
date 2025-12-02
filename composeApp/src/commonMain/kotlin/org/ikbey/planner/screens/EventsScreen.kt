@@ -75,13 +75,13 @@ fun EventsScreen(
 
     var settingsCloseTrigger by remember {mutableStateOf(0)}
 
-    LaunchedEffect(Unit, settingsCloseTrigger) { // Добавляем зависимость от триггера
+    LaunchedEffect(Unit, settingsCloseTrigger) {
         val allEvents = localDb.getCalendarEvents()
         calendarEvents.value = removeDuplicates(allEvents)
         applyFilters(calendarEvents.value, FilterManager.selectedFilters, filteredEvents)
     }
 
-    LaunchedEffect(FilterManager.selectedFilters, settingsCloseTrigger) { // Добавляем зависимость от триггера
+    LaunchedEffect(FilterManager.selectedFilters, settingsCloseTrigger) {
         applyFilters(calendarEvents.value, FilterManager.selectedFilters, filteredEvents)
     }
 
