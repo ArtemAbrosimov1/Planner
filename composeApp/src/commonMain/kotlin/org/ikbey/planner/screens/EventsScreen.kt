@@ -73,13 +73,15 @@ fun EventsScreen(
 
     var isSwipeActive by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    var settingsCloseTrigger by remember {mutableStateOf(0)}
+
+    LaunchedEffect(Unit, settingsCloseTrigger) { // Добавляем зависимость от триггера
         val allEvents = localDb.getCalendarEvents()
         calendarEvents.value = removeDuplicates(allEvents)
         applyFilters(calendarEvents.value, FilterManager.selectedFilters, filteredEvents)
     }
 
-    LaunchedEffect(FilterManager.selectedFilters) {
+    LaunchedEffect(FilterManager.selectedFilters, settingsCloseTrigger) { // Добавляем зависимость от триггера
         applyFilters(calendarEvents.value, FilterManager.selectedFilters, filteredEvents)
     }
 
@@ -118,7 +120,10 @@ fun EventsScreen(
 
         if (showSettings) {
             SettingsCard(
-                onDismiss = { showSettings = false }
+                onDismiss = {
+                    showSettings = false
+                    settingsCloseTrigger++
+                }
             )
         }
 
